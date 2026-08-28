@@ -1,0 +1,329 @@
+{
+  "meta": {
+    "client": "FJC",
+    "campaign": "Road to Camp",
+    "title": "Fall 2026 Campaign Planner",
+    "updated": "2026-08-28",
+    "intro": "This planner maps upcoming campaign + web milestones, what Bald will share, and what FJC needs to provide at each step. Because workstreams are moving in parallel, timely consolidated feedback and approvals keep dependent work moving.",
+    "deadlineNote": "Any feedback or approval delay will impact the remaining timeline and the launch date.",
+    "notes": [
+      "Most deliverables include one refinement round (V1 → feedback → V2/final). FJC will provide one consolidated response within the noted feedback window. Changes to previously approved work may require rework and impact timing and/or scope.",
+      "Dates are projected and subject to change pending client feedback timing and requests.",
+      "Rounds of revisions are maximum projected revisions within the timeline as required — without feedback we will assume approval to keep the project moving.",
+      "Status is refreshed at each milestone checkpoint, not continuously."
+    ],
+    "actionKey": {
+      "FEEDBACK": "Bald will refine based on your notes; not yet locked.",
+      "APPROVAL": "Work is locked and downstream work proceeds on this basis.",
+      "CLIENT INPUT": "Information, specs, or decisions needed from FJC to progress.",
+      "NO ACTION": "Nothing needed from FJC at this step."
+    },
+    "statusKey": {
+      "COMPLETE": "Approved/delivered — no longer active.",
+      "ON TRACK": "Moving as planned; no known blockers.",
+      "AT RISK": "Depends on something not yet locked; could slip if that slips.",
+      "DELAYED": "Already behind its original date."
+    }
+  },
+  "checkpoints": [
+    { "id": "c1", "date": "2026-08-20", "label": "Campaign Refinement / V1 Review", "fjcAction": "COMPLETE — final name (“Road to Camp”) and hybrid creative direction approved 8/25." },
+    { "id": "c2", "date": "2026-08-28", "label": "Wireframe + Copy V2", "fjcAction": "Feedback on refined wireframes + web copy." },
+    { "id": "c3", "date": "2026-09-01", "label": "Asset Development", "fjcAction": "Approve refined Campaign ID + core direction; confirm asset mix, priorities, and specs." },
+    { "id": "c4", "date": "2026-09-03", "label": "Final Wireframes", "fjcAction": "Final approval on wireframes + web copy before UI begins.", "isNew": true },
+    { "id": "c5", "date": "2026-09-10", "label": "Web UI V1", "fjcAction": "Feedback on landing page visual design." },
+    { "id": "c6", "date": "2026-09-11", "label": "Rollout Refinement", "fjcAction": "Approve refined comms / rollout plan." },
+    { "id": "c7", "date": "2026-09-16", "label": "Final UI", "fjcAction": "Approve final UI (incl. mobile), final messaging, and priority asset concepts/layouts." },
+    { "id": "c8", "date": "2026-09-24", "label": "Toolkit V1 + Continued Asset Development", "fjcAction": "Feedback on Toolkit V1, asset copy, and design." },
+    { "id": "c9", "date": "2026-10-05", "label": "Toolkit + Launch Asset Finalization", "fjcAction": "Approve toolkits, partner asset templates, and priority launch assets." },
+    { "id": "c10", "date": "2026-10-07", "label": "Landing Page Staging", "fjcAction": "QA feedback — functionality, content accuracy, links + implementation issues." },
+    { "id": "c11", "date": "2026-10-13", "label": "Camp Training / Toolkit Handover", "fjcAction": "Coordinate camp onboarding/training." },
+    { "id": "c12", "date": "2026-10-16", "label": "Web + Campaign Launch", "fjcAction": "No action needed — campaign + web go live." },
+    { "id": "c13", "date": "2026-10-19", "label": "Paid Media Launch", "fjcAction": "No action needed — paid media goes live." }
+  ],
+  "items": [
+    {
+      "id": "i1", "cp": "c1", "cat": "Campaign", "deliverable": "Campaign Naming Shortlist", "version": "COMPLETE",
+      "sharing": "4 name directions for the campaign platform",
+      "needs": "Final name selection",
+      "action": "APPROVAL", "deadline": "2026-08-21",
+      "locks": "Final campaign name: “Road to Camp”",
+      "unlocks": "Campaign ID (9/1); all copy, web, and toolkit references",
+      "notes": "Approved 8/25 — replaces the “Camp for All” placeholder used in earlier materials.",
+      "status": "COMPLETE", "deps": ["d1"]
+    },
+    {
+      "id": "i2", "cp": "c1", "cat": "Campaign", "deliverable": "Campaign Identity + Creative", "version": "COMPLETE",
+      "sharing": "Creative direction and identity system, two directions presented",
+      "needs": "Consolidated feedback",
+      "action": "APPROVAL", "deadline": "2026-08-21",
+      "locks": "Hybrid creative direction (Direction 1 + Direction 2 elements)",
+      "unlocks": "Campaign ID + asset application (9/1)",
+      "notes": "Approved 8/25 as a hybrid — not a single direction.",
+      "status": "COMPLETE", "deps": ["d1", "d2"]
+    },
+    {
+      "id": "i3", "cp": "c1", "cat": "Messaging", "deliverable": "Messaging", "version": "COMPLETE — V1 round",
+      "sharing": "Initial message architecture / pillars",
+      "needs": "Consolidated feedback",
+      "action": "FEEDBACK", "deadline": "2026-08-21",
+      "locks": "",
+      "unlocks": "Messaging V2; copy for web, assets, + toolkit",
+      "notes": "Client read: “on the way, but not quite there” — treat V2 as a tightening pass, not a rewrite.",
+      "status": "COMPLETE", "deps": ["d4"]
+    },
+    {
+      "id": "i4", "cp": "c1", "cat": "Rollout & Launch", "deliverable": "High-Level Comms / Rollout Plan", "version": "COMPLETE — V1 round",
+      "sharing": "Initial channel and rollout approach",
+      "needs": "Consolidated feedback",
+      "action": "FEEDBACK", "deadline": "2026-08-21",
+      "locks": "",
+      "unlocks": "Comms / rollout plan refinement (9/11)",
+      "notes": "",
+      "status": "COMPLETE", "deps": ["d3"]
+    },
+    {
+      "id": "i5", "cp": "c1", "cat": "Web", "deliverable": "Landing Page Wireframes + Preliminary Copy", "version": "COMPLETE — V1 round",
+      "sharing": "Wireframes + directional web copy",
+      "needs": "Consolidated feedback",
+      "action": "FEEDBACK", "deadline": "2026-08-21",
+      "locks": "",
+      "unlocks": "Wireframe + Copy V2 (8/28)",
+      "notes": "",
+      "status": "COMPLETE", "deps": ["d6"]
+    },
+    {
+      "id": "i6", "cp": "c2", "cat": "Web", "deliverable": "Web Wireframes + Copy", "version": "V2",
+      "sharing": "Refined wireframes + web copy",
+      "needs": "Feedback",
+      "action": "FEEDBACK", "deadline": "2026-09-01",
+      "locks": "",
+      "unlocks": "Final Wireframes review (9/3)",
+      "notes": "Working toward ~99% of copy locked ahead of UI.",
+      "status": "ON TRACK", "deps": ["d6"]
+    },
+    {
+      "id": "i7", "cp": "c2", "cat": "Web", "deliverable": "Web Moodboards (TBC)", "version": "Execution",
+      "sharing": "Moodboards for visual direction",
+      "needs": "Feedback",
+      "action": "FEEDBACK", "deadline": "2026-09-01",
+      "locks": "",
+      "unlocks": "Web UI V1 (9/10)",
+      "notes": "We may skip moodboards and go straight into UI once Campaign ID is approved; if included, feedback folds into UI V1.",
+      "status": "ON TRACK", "deps": []
+    },
+    {
+      "id": "i8", "cp": "c3", "cat": "Campaign", "deliverable": "Campaign ID + Initial Asset Application", "version": "V2",
+      "sharing": "Refined campaign identity system, built on the approved name",
+      "needs": "Approval of refined campaign ID (logo, colors, typography, graphic elements, visual direction)",
+      "action": "APPROVAL", "deadline": "2026-09-02",
+      "locks": "Core campaign identity system",
+      "unlocks": "Asset development, UI design, toolkit development",
+      "notes": "Built on the name + direction approved 8/25.",
+      "status": "ON TRACK", "deps": ["d2"]
+    },
+    {
+      "id": "i9", "cp": "c3", "cat": "Messaging", "deliverable": "Messaging", "version": "V2",
+      "sharing": "Refined message framework, architecture, and direction for copy",
+      "needs": "Feedback",
+      "action": "FEEDBACK", "deadline": "2026-09-02",
+      "locks": "",
+      "unlocks": "Final messaging (9/16)",
+      "notes": "Asset copy can progress against this draft; final layouts need messaging approved.",
+      "status": "ON TRACK", "deps": ["d4"]
+    },
+    {
+      "id": "i10", "cp": "c3", "cat": "Assets & Toolkit", "deliverable": "Launch + Toolkit Asset Recommendation", "version": "Recommendation",
+      "sharing": "Recommended asset mix / priorities for launch and partner toolkit",
+      "needs": "Approval on selected channels and asset mix/priorities; confirm required specs (print sizes, mandatory content, camp/partner requirements, formats/platforms)",
+      "action": "CLIENT INPUT", "deadline": "2026-09-02",
+      "locks": "Asset + toolkit production scope",
+      "unlocks": "Priority asset development; Toolkit V1 (9/24)",
+      "notes": "This lock is critical — changes after this date may require rework and affect 9/24 and downstream dates.",
+      "status": "ON TRACK", "deps": ["d3"], "critical": true
+    },
+    {
+      "id": "i11", "cp": "c4", "cat": "Web", "deliverable": "Web Wireframes + Copy — Final", "version": "Final",
+      "sharing": "Final wireframes + web copy",
+      "needs": "Final approval before UI progresses",
+      "action": "APPROVAL", "deadline": "2026-09-04",
+      "locks": "Page structure, functionality, hierarchy, ~99% of web copy",
+      "unlocks": "Web UI V1 (9/10)",
+      "notes": "Added review round (not in the original plan) to fully lock copy before UI begins. Minor in-situ edits may still happen during UI/staging if within ~10% of approved word count.",
+      "status": "ON TRACK", "deps": ["d6"]
+    },
+    {
+      "id": "i12", "cp": "c5", "cat": "Web", "deliverable": "Landing Page UI Design", "version": "V1",
+      "sharing": "Visual UI design for the landing page",
+      "needs": "Feedback on visual design",
+      "action": "FEEDBACK", "deadline": "2026-09-11",
+      "locks": "",
+      "unlocks": "Final UI + mobile (9/16)",
+      "notes": "Copy should already be substantially locked; only minor contextual edits expected.",
+      "status": "ON TRACK", "deps": ["d6", "d7"]
+    },
+    {
+      "id": "i13", "cp": "c6", "cat": "Rollout & Launch", "deliverable": "Comms / Rollout Plan", "version": "Refined",
+      "sharing": "Refined rollout plan across channels",
+      "needs": "Approval",
+      "action": "APPROVAL", "deadline": "2026-09-12",
+      "locks": "Rollout plan",
+      "unlocks": "Launch execution (10/16, 10/19)",
+      "notes": "",
+      "status": "ON TRACK", "deps": ["d3"]
+    },
+    {
+      "id": "i14", "cp": "c7", "cat": "Assets & Toolkit", "deliverable": "Priority Asset Concepts + Layouts", "version": "Final",
+      "sharing": "Final priority asset concepts",
+      "needs": "Approval of creative direction + layouts for priority assets",
+      "action": "APPROVAL", "deadline": "2026-09-17",
+      "locks": "",
+      "unlocks": "Continued launch asset production; Toolkit V1 (9/24)",
+      "notes": "Final production may still include copy right-sizing, format/spec adaptations, and required variations.",
+      "status": "ON TRACK", "deps": ["d5"]
+    },
+    {
+      "id": "i15", "cp": "c7", "cat": "Web", "deliverable": "Final UI", "version": "Final",
+      "sharing": "Final responsive UI design including mobile",
+      "needs": "UI approval",
+      "action": "APPROVAL", "deadline": "2026-09-17",
+      "locks": "Visual design, imagery, responsive behavior, final copy",
+      "unlocks": "Landing page moves into development; staging (10/7)",
+      "notes": "",
+      "status": "ON TRACK", "deps": ["d7"]
+    },
+    {
+      "id": "i16", "cp": "c7", "cat": "Messaging", "deliverable": "Messaging", "version": "Final",
+      "sharing": "Final messaging framework + boilerplate",
+      "needs": "Approval",
+      "action": "APPROVAL", "deadline": "2026-09-17",
+      "locks": "Messaging",
+      "unlocks": "Final copy across remaining assets + toolkit",
+      "notes": "",
+      "status": "ON TRACK", "deps": ["d4", "d5"]
+    },
+    {
+      "id": "i17", "cp": "c8", "cat": "Assets & Toolkit", "deliverable": "Partner Toolkit", "version": "V1",
+      "sharing": "First version of the customizable partner/camp toolkit",
+      "needs": "Feedback; confirm any remaining camp/partner-specific requirements",
+      "action": "FEEDBACK", "deadline": "2026-09-25",
+      "locks": "",
+      "unlocks": "Toolkit finalization (10/5)",
+      "notes": "",
+      "status": "ON TRACK", "deps": ["d9"]
+    },
+    {
+      "id": "i18", "cp": "c8", "cat": "Assets & Toolkit", "deliverable": "Additional Launch / Campaign Assets", "version": "In progress",
+      "sharing": "Continued asset development",
+      "needs": "Feedback",
+      "action": "FEEDBACK", "deadline": "2026-09-25",
+      "locks": "",
+      "unlocks": "Final asset mix for launch",
+      "notes": "",
+      "status": "ON TRACK", "deps": ["d5"]
+    },
+    {
+      "id": "i19", "cp": "c9", "cat": "Assets & Toolkit", "deliverable": "Final Toolkit and Asset Templates, final launch asset revisions", "version": "Final",
+      "sharing": "Final changes to partner/camp toolkit(s) and templates, finalized launch assets",
+      "needs": "Final approval of toolkits, partner asset templates, and launch assets",
+      "action": "APPROVAL", "deadline": "2026-10-06",
+      "locks": "",
+      "unlocks": "File prep for camp onboarding/training; launch across priority channels/assets",
+      "notes": "",
+      "status": "ON TRACK", "deps": ["d9"]
+    },
+    {
+      "id": "i20", "cp": "c10", "cat": "Web", "deliverable": "Landing Page Staging + QA", "version": "Execution",
+      "sharing": "Landing page presented in staging environment",
+      "needs": "QA feedback focused on functionality, content accuracy, links, and implementation issues",
+      "action": "CLIENT INPUT", "deadline": "2026-10-08",
+      "locks": "",
+      "unlocks": "Web + Campaign Launch (10/16)",
+      "notes": "Previously approved UX/UI should remain locked; reopening decisions at this stage may affect the launch date.",
+      "status": "ON TRACK", "deps": ["d8"]
+    },
+    {
+      "id": "i21", "cp": "c11", "cat": "Assets & Toolkit", "deliverable": "Toolkit File Prep / Handoff", "version": "Final",
+      "sharing": "Completed toolkit files delivered to partner camps",
+      "needs": "",
+      "action": "NO ACTION", "deadline": null,
+      "locks": "",
+      "unlocks": "Camp onboarding/training",
+      "notes": "",
+      "status": "ON TRACK", "deps": ["d9"]
+    },
+    {
+      "id": "i22", "cp": "c11", "cat": "Assets & Toolkit", "deliverable": "Camp Onboarding / Toolkit Training", "version": "Execution",
+      "sharing": "Training session(s) for participating camps — live or recorded",
+      "needs": "",
+      "action": "NO ACTION", "deadline": null,
+      "locks": "",
+      "unlocks": "Camps equipped to activate locally",
+      "notes": "",
+      "status": "ON TRACK", "deps": []
+    },
+    {
+      "id": "i23", "cp": "c12", "cat": "Rollout & Launch", "deliverable": "Campaign Launch", "version": "Execution",
+      "sharing": "Parent-facing FJC campaign + landing page go live",
+      "needs": "",
+      "action": "NO ACTION", "deadline": null,
+      "locks": "",
+      "unlocks": "",
+      "notes": "",
+      "status": "ON TRACK", "deps": []
+    },
+    {
+      "id": "i24", "cp": "c13", "cat": "Rollout & Launch", "deliverable": "Paid Campaign + Ongoing Optimization", "version": "Begins",
+      "sharing": "Paid campaign goes live and ongoing management begins",
+      "needs": "",
+      "action": "NO ACTION", "deadline": null,
+      "locks": "",
+      "unlocks": "",
+      "notes": "",
+      "status": "ON TRACK", "deps": []
+    }
+  ],
+  "dependencies": [
+    { "id": "d1", "locked": "Campaign name", "unlocks": "Campaign ID", "why": "The selected name needs to be incorporated into the identity system." },
+    { "id": "d2", "locked": "Campaign ID", "unlocks": "Asset design & production, landing page design", "why": "Assets and landing page design need to use the approved identity system; earlier exploration can be used directionally." },
+    { "id": "d3", "locked": "Rollout strategy, asset mix + specs", "unlocks": "Asset design & production, toolkit planning", "why": "Design needs confirmed priorities, formats, specs, mandatory content + camp/partner requirements. Toolkit needs a confirmed mix of asset templates." },
+    { "id": "d4", "locked": "Messaging", "unlocks": "Asset copy and toolkits", "why": "Copy can progress alongside messaging refinement and finalize once messaging is approved." },
+    { "id": "d5", "locked": "Asset copy", "unlocks": "Final asset design & production", "why": "Final asset layouts need to be right-sized to accommodate approved copy." },
+    { "id": "d6", "locked": "UX + web copy", "unlocks": "UI design", "why": "Page structure and content need to be established before visual design can begin." },
+    { "id": "d7", "locked": "UI", "unlocks": "Web development & QA", "why": "Development builds the approved design; changes that reopen UX/UI during development may impact timing and/or scope." },
+    { "id": "d8", "locked": "Web development + QA", "unlocks": "Launch", "why": "Staging and client QA need to be complete before the site can be approved for launch." },
+    { "id": "d9", "locked": "Toolkit(s)", "unlocks": "File prep/handover", "why": "Approved toolkit content and templates need to be finalized before production files can be prepared and handed over." }
+  ],
+  "revisions": [
+    { "name": "Campaign Concept", "rounds": "1 round" },
+    { "name": "Name", "rounds": "1 round" },
+    { "name": "Campaign ID", "rounds": "1 round" },
+    { "name": "Messaging", "rounds": "2 rounds" },
+    { "name": "Rollout Strategy & Planning", "rounds": "2 rounds" },
+    { "name": "Launch & Toolkit Asset Development", "rounds": "2 rounds" },
+    { "name": "Toolkits", "rounds": "1 round" },
+    { "name": "Wireframes & Copy", "rounds": "2 rounds" },
+    { "name": "UI", "rounds": "1 round" },
+    { "name": "Web Development", "rounds": "Client QA prior to launch" }
+  ],
+  "revisionsNote": "Revision rounds are planned around the current timeline and assume consolidated feedback within the agreed review windows. Additional revisions or changes to previously approved work may impact timing and/or scope. Wireframes & Copy increased to 2 rounds (V2 + Final) to fully lock copy before UI begins.",
+  "workflows": [
+    {
+      "title": "How the web workflow moves",
+      "phases": [
+        { "phase": "UX — Wireframes + Copy", "what": "V1 review + 2 revision rounds (V2, then Final).", "locks": "Page structure, functionality, hierarchy + ~99% of copy." },
+        { "phase": "UI — Page Design", "what": "V1 design + 1–2 refinement rounds (TBC).", "locks": "Visual design, imagery, responsive behavior + final copy." },
+        { "phase": "Development — Staging + Launch", "what": "Build approved UI → staging/QA → launch.", "locks": "Live site." }
+      ]
+    },
+    {
+      "title": "How the asset + toolkit workflow moves",
+      "phases": [
+        { "phase": "Direction + Scope", "what": "Confirm Campaign ID, priority assets, requirements + specs.", "locks": "Identity system; asset mix/priorities + specs." },
+        { "phase": "Copy", "what": "Develop asset copy against the refined messaging direction.", "locks": "Copy for each priority asset." },
+        { "phase": "Design", "what": "Apply the approved identity + copy across priority assets.", "locks": "Visual design for priority assets." },
+        { "phase": "Toolkit Assembly", "what": "Package approved assets, templates + messaging for camps.", "locks": "Toolkit V1 + editable templates." },
+        { "phase": "Final Production + Handoff", "what": "Prepare final files and equip camps for launch.", "locks": "Final toolkit + launch assets." }
+      ]
+    }
+  ]
+}

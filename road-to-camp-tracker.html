@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Road to Camp — Campaign Tracker</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style id="app-css">
+:root{
+  --paper:#FBFAF8; --surface:#FFFFFF; --surface-2:#F4F1ED; --surface-3:#EFEBE6;
+  --ink:#171310; --ink-2:#463E39; --muted:#7C716A;
+  --line:#E6E0D9; --line-2:#D2C9C1;
+  --accent:#F05417; --accent-ink:#B33C0C; --accent-soft:#FDEEE6;
+  --ok:#1F6B4A; --ok-soft:#E6F0EA;
+  --warn:#8F6200; --warn-soft:#F7EEDA;
+  --bad:#A82A1D; --bad-soft:#FAE7E4;
+  --done:#6B625C; --done-soft:#EEEAE5;
+  --shadow:0 1px 2px rgba(23,19,16,.05), 0 8px 24px -16px rgba(23,19,16,.25);
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#100E0D; --surface:#191614; --surface-2:#221E1B; --surface-3:#2A2522;
+    --ink:#F6F2EE; --ink-2:#D0C7C0; --muted:#9B9088;
+    --line:#2C2724; --line-2:#3D3733;
+    --accent:#FF6E33; --accent-ink:#FF8A57; --accent-soft:#361B0E;
+    --ok:#74CF9E; --ok-soft:#12291E;
+    --warn:#E2B25F; --warn-soft:#2C2312;
+    --bad:#F0897D; --bad-soft:#301715;
+    --done:#928780; --done-soft:#242019;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#100E0D; --surface:#191614; --surface-2:#221E1B; --surface-3:#2A2522;
+  --ink:#F6F2EE; --ink-2:#D0C7C0; --muted:#9B9088;
+  --line:#2C2724; --line-2:#3D3733;
+  --accent:#FF6E33; --accent-ink:#FF8A57; --accent-soft:#361B0E;
+  --ok:#74CF9E; --ok-soft:#12291E;
+  --warn:#E2B25F; --warn-soft:#2C2312;
+  --bad:#F0897D; --bad-soft:#301715;
+  --done:#928780; --done-soft:#242019;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink)}
+body{font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.55;
+  font-feature-settings:"kern";-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+[hidden]{display:none!important}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+.wrap{max-width:1180px;margin:0 auto;padding:32px 24px 80px;display:flex;flex-direction:column;gap:26px}
+@media(max-width:640px){.wrap{padding:22px 14px 64px;gap:20px}}
+
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.masthead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;
+  padding-bottom:20px;border-bottom:1px solid var(--line)}
+.masthead h1{font-family:Archivo,"Helvetica Neue",sans-serif;font-weight:700;font-size:clamp(30px,5vw,46px);
+  letter-spacing:-.028em;line-height:1;margin:9px 0 6px;text-wrap:balance}
+.eyebrow .amp{color:var(--accent)}
+.sub{margin:0;color:var(--muted);font-size:13.5px}
+.mh-r{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.updated{margin:0;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;color:var(--muted)}
+.mh-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+
+.btn{background:var(--surface);border:1px solid var(--line-2);color:var(--ink);border-radius:7px;
+  padding:7px 13px;font-size:12.5px;font-weight:500;cursor:pointer;transition:border-color .15s,background .15s,color .15s;
+  display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.btn-accent{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent);border-color:var(--accent);color:#fff;filter:brightness(1.07)}
+.btn-quiet{background:transparent;border-color:transparent;color:var(--muted);padding:5px 8px}
+.btn-quiet:hover{color:var(--accent-ink);background:var(--surface-2)}
+.btn-sm{padding:4px 9px;font-size:11.5px}
+
+.intro{margin:0;max-width:74ch;color:var(--ink-2);font-size:14.5px}
+
+/* dashboard */
+.dash{display:flex;flex-direction:column;gap:14px}
+.prog{display:flex;flex-direction:column;gap:7px}
+.prog-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.prog-top strong{font-family:Archivo,sans-serif;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.prog-bar{height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;
+  display:flex;flex-direction:column;gap:3px;align-items:flex-start;cursor:pointer;text-align:left;
+  transition:border-color .15s,box-shadow .15s;position:relative}
+.tile:hover{border-color:var(--line-2);box-shadow:var(--shadow)}
+.tile[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.tile .n{font-family:Archivo,sans-serif;font-size:30px;font-weight:700;line-height:1;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.tile .lbl{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tile .dot{width:7px;height:7px;border-radius:50%;position:absolute;top:14px;right:14px}
+.tile.t-done .n{color:var(--done)} .tile.t-done .dot{background:var(--done)}
+.tile.t-ok .n{color:var(--ok)} .tile.t-ok .dot{background:var(--ok)}
+.tile.t-warn .n{color:var(--warn)} .tile.t-warn .dot{background:var(--warn)}
+.tile.t-bad .n{color:var(--bad)} .tile.t-bad .dot{background:var(--bad)}
+.tile.zero .n{color:var(--muted);opacity:.55} .tile.zero .dot{opacity:.3}
+
+.focus-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:640px){.focus-row{grid-template-columns:1fr}}
+.focus{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;
+  display:flex;flex-direction:column;gap:4px}
+.focus b{font-family:Archivo,sans-serif;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.focus .meta{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.03em}
+
+/* tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:thin}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:9px 13px;cursor:pointer;
+  font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .count{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted);margin-left:5px}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.search{flex:1 1 230px;min-width:180px;position:relative;display:flex;align-items:center}
+.search input{width:100%;background:var(--surface);border:1px solid var(--line-2);border-radius:7px;
+  padding:8px 11px 8px 32px;font-size:13px}
+.search input::placeholder{color:var(--muted)}
+.search svg{position:absolute;left:10px;width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.8}
+.chipset{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chipset .cs-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:4px 11px;font-size:12px;
+  cursor:pointer;color:var(--ink-2);transition:border-color .15s,color .15s}
+.chip:hover{border-color:var(--line-2)}
+.chip[aria-pressed="true"]{border-color:var(--accent);color:var(--accent-ink);box-shadow:inset 0 0 0 1px var(--accent)}
+.controls .spacer{flex:1}
+.clear-link{background:none;border:0;color:var(--accent-ink);font-size:12px;cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:2px}
+
+/* groups + rows */
+.groups{display:flex;flex-direction:column;gap:16px}
+.group{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.group.is-past{opacity:.82}
+.ghead{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--surface-2);
+  border-bottom:1px solid var(--line)}
+.ghead .gdate{font-family:Archivo,sans-serif;font-weight:700;font-size:19px;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;min-width:58px}
+.ghead .gmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.ghead .gtitle{font-family:Archivo,sans-serif;font-weight:600;font-size:15px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ghead .gaction{color:var(--ink-2);font-size:13px;max-width:70ch}
+.ghead .gright{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.newtag{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent-ink);border:1px solid var(--accent);border-radius:4px;padding:1px 5px}
+
+.rows{display:flex;flex-direction:column}
+.row{border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.rhead{display:grid;grid-template-columns:20px 1fr auto;gap:12px;align-items:center;width:100%;
+  padding:12px 16px;background:none;border:0;cursor:pointer;text-align:left;transition:background .15s}
+.rhead:hover{background:var(--surface-2)}
+.caret{width:9px;height:9px;border-right:1.6px solid var(--muted);border-bottom:1.6px solid var(--muted);
+  transform:rotate(-45deg);margin-left:5px;transition:transform .18s}
+.row.open .caret{transform:rotate(45deg)}
+.rmain{min-width:0;display:flex;flex-direction:column;gap:3px}
+.rtitle{font-weight:500;font-size:14px;letter-spacing:-.005em}
+.rmeta{display:flex;gap:9px;flex-wrap:wrap;align-items:center;font-family:"IBM Plex Mono",monospace;
+  font-size:10.5px;letter-spacing:.05em;color:var(--muted);text-transform:uppercase}
+.rmeta .sep{opacity:.45}
+.rright{display:flex;align-items:center;gap:9px;flex-shrink:0}
+@media(max-width:700px){.rhead{grid-template-columns:16px 1fr;row-gap:8px}.rright{grid-column:2;justify-content:flex-start}}
+
+.pill{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:20px;white-space:nowrap;border:1px solid transparent}
+.p-done{background:var(--done-soft);color:var(--done);border-color:var(--done-soft)}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-bad{background:var(--bad-soft);color:var(--bad)}
+.act{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;border:1px solid var(--line-2);color:var(--ink-2);white-space:nowrap}
+.act.a-approval{border-color:var(--accent);color:var(--accent-ink)}
+.act.a-feedback{border-color:var(--line-2)}
+.act.a-input{border-style:dashed;border-color:var(--line-2)}
+.act.a-none{opacity:.5}
+
+.rbody{padding:2px 16px 18px 48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px 26px;
+  border-top:1px dashed var(--line);margin-top:-1px}
+@media(max-width:700px){.rbody{padding-left:16px}}
+.fld{display:flex;flex-direction:column;gap:3px;min-width:0}
+.fld .k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fld .v{font-size:13.5px;color:var(--ink-2)}
+.fld .v.strong{color:var(--ink)}
+.fld.span-all{grid-column:1/-1}
+.note-callout{grid-column:1/-1;border-left:2px solid var(--accent);background:var(--accent-soft);
+  padding:9px 12px;border-radius:0 6px 6px 0;font-size:13px;color:var(--ink-2)}
+.deplinks{display:flex;flex-wrap:wrap;gap:6px}
+.deplink{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:4px 9px;font-size:12px;
+  cursor:pointer;color:var(--ink-2);text-align:left}
+.deplink:hover{border-color:var(--accent);color:var(--accent-ink)}
+.row-tools{grid-column:1/-1;display:flex;gap:8px;padding-top:4px}
+
+/* checklist */
+.check{display:flex;flex-direction:column;gap:10px}
+.cl-item{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:start;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:13px 15px}
+.cl-item.overdue{border-color:var(--bad)}
+.cl-date{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;gap:1px}
+.cl-date .d{font-family:Archivo,sans-serif;font-weight:700;font-size:17px;letter-spacing:-.02em}
+.cl-date .rel{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.cl-item.overdue .cl-date .rel{color:var(--bad)}
+.cl-main{min-width:0;display:flex;flex-direction:column;gap:4px}
+.cl-main .t{font-weight:500;font-size:14px}
+.cl-main .n{font-size:13px;color:var(--muted)}
+.cl-main .need{font-size:13.5px;color:var(--ink-2)}
+.cl-main .need b{font-weight:600;color:var(--ink)}
+.cl-main .ctx{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+@media(max-width:640px){.cl-item{grid-template-columns:1fr;gap:8px}.cl-item .cl-right{justify-self:start}}
+
+/* dependency chain */
+.chain{display:flex;flex-direction:column;gap:8px}
+.dep{display:grid;grid-template-columns:minmax(140px,max-content) 22px minmax(200px,1fr);gap:6px 14px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;
+  transition:border-color .2s,box-shadow .2s}
+.dep.hot{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.dep .lock{font-family:Archivo,sans-serif;font-weight:600;font-size:14.5px;letter-spacing:-.01em}
+.dep .arrow{color:var(--accent);font-size:16px;text-align:center;font-family:"IBM Plex Mono",monospace}
+.dep .un{font-size:14px;color:var(--ink-2)}
+.dep .why{grid-column:1/-1;font-size:13px;color:var(--muted);max-width:80ch;border-top:1px dashed var(--line);padding-top:9px;margin-top:2px}
+.dep .rel{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+@media(max-width:640px){.dep{grid-template-columns:1fr}.dep .arrow{text-align:left}}
+
+/* reference */
+.ref{display:flex;flex-direction:column;gap:24px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.card h3{margin:0;padding:13px 16px;font-family:Archivo,sans-serif;font-size:14px;font-weight:600;letter-spacing:-.01em;
+  background:var(--surface-2);border-bottom:1px solid var(--line)}
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:11px 16px;border-top:1px solid var(--line);vertical-align:top}
+th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  border-top:0;font-weight:500}
+tbody tr:first-child td{border-top:1px solid var(--line)}
+td.k{font-weight:500;color:var(--ink)}
+.keylist{display:flex;flex-direction:column;gap:9px;padding:15px 16px}
+.keyline{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:start;font-size:13.5px;color:var(--ink-2)}
+@media(max-width:520px){.keyline{grid-template-columns:1fr;gap:2px}}
+.notelist{margin:0;padding:15px 16px 15px 32px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--ink-2)}
+
+.empty{text-align:center;padding:52px 20px;color:var(--muted);border:1px dashed var(--line-2);border-radius:var(--r)}
+.empty b{display:block;font-family:Archivo,sans-serif;font-size:16px;color:var(--ink);margin-bottom:5px;font-weight:600}
+
+footer{border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12px;display:flex;
+  justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* edit mode */
+.editbar{position:sticky;top:0;z-index:30;background:var(--accent-soft);border:1px solid var(--accent);
+  border-radius:var(--r);padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.editbar .eb-t{font-size:13px;color:var(--ink)}
+.editbar .eb-t b{font-family:Archivo,sans-serif;font-weight:600}
+.editbar .spacer{flex:1}
+body.editing .rhead:hover{background:var(--accent-soft)}
+.addrow{display:flex;padding:9px 16px;border-top:1px dashed var(--line-2)}
+.rowempty{padding:14px 16px;color:var(--muted);font-size:13px}
+
+/* modal */
+dialog{border:1px solid var(--line-2);border-radius:12px;background:var(--surface);color:var(--ink);padding:0;
+  width:min(660px,94vw);box-shadow:0 24px 60px -20px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(20,16,13,.5)}
+.mhd{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line)}
+.mhd h2{margin:0;font-family:Archivo,sans-serif;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.mbody{padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:13px;max-height:64vh;overflow-y:auto}
+@media(max-width:600px){.mbody{grid-template-columns:1fr}}
+.f{display:flex;flex-direction:column;gap:4px}
+.f.wide{grid-column:1/-1}
+.f label{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.f input,.f select,.f textarea{background:var(--paper);border:1px solid var(--line-2);border-radius:7px;padding:8px 10px;
+  font-size:13.5px;width:100%}
+.f textarea{resize:vertical;min-height:62px;font-family:inherit}
+.f input:focus,.f select:focus,.f textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+.mfoot{display:flex;justify-content:space-between;gap:10px;padding:14px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
+.mfoot .right{display:flex;gap:8px;margin-left:auto}
+.danger{color:var(--bad);border-color:var(--line-2)}
+.danger:hover{border-color:var(--bad);color:var(--bad)}
+
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:var(--paper);
+  padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:var(--shadow);z-index:80;max-width:min(520px,92vw)}
+.readonly-note{background:var(--surface-2);border:1px dashed var(--line-2);border-radius:var(--r);padding:11px 14px;
+  font-size:13px;color:var(--ink-2)}
+
+/* standalone-host additions */
+.modal-note{margin:0 0 9px;font-size:13.5px;color:var(--ink-2);line-height:1.6}
+.modal-note:last-child{margin-bottom:0}
+.modal-note b{font-weight:600;color:var(--ink)}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+.readonly-note code{background:var(--surface);}
+:root{color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark}}
+.prog-pct{font-size:12px;color:var(--muted)}
+.crit{color:var(--accent-ink)}
+.cl-right{display:flex;gap:8px;align-items:center}
+.card-foot{margin:0;padding:13px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script id="app-state" type="application/json">{"meta": {"client": "FJC", "campaign": "Road to Camp", "title": "Fall 2026 Campaign Planner", "updated": "2026-08-28", "intro": "This planner maps upcoming campaign + web milestones, what Bald will share, and what FJC needs to provide at each step. Because workstreams are moving in parallel, timely consolidated feedback and approvals keep dependent work moving.", "deadlineNote": "Any feedback or approval delay will impact the remaining timeline and the launch date.", "notes": ["Most deliverables include one refinement round (V1 → feedback → V2/final). FJC will provide one consolidated response within the noted feedback window. Changes to previously approved work may require rework and impact timing and/or scope.", "Dates are projected and subject to change pending client feedback timing and requests.", "Rounds of revisions are maximum projected revisions within the timeline as required — without feedback we will assume approval to keep the project moving.", "Status is refreshed at each milestone checkpoint, not continuously."], "actionKey": {"FEEDBACK": "Bald will refine based on your notes; not yet locked.", "APPROVAL": "Work is locked and downstream work proceeds on this basis.", "CLIENT INPUT": "Information, specs, or decisions needed from FJC to progress.", "NO ACTION": "Nothing needed from FJC at this step."}, "statusKey": {"COMPLETE": "Approved/delivered — no longer active.", "ON TRACK": "Moving as planned; no known blockers.", "AT RISK": "Depends on something not yet locked; could slip if that slips.", "DELAYED": "Already behind its original date."}}, "checkpoints": [{"id": "c1", "date": "2026-08-20", "label": "Campaign Refinement / V1 Review", "fjcAction": "COMPLETE — final name (“Road to Camp”) and hybrid creative direction approved 8/25."}, {"id": "c2", "date": "2026-08-28", "label": "Wireframe + Copy V2", "fjcAction": "Feedback on refined wireframes + web copy."}, {"id": "c3", "date": "2026-09-01", "label": "Asset Development", "fjcAction": "Approve refined Campaign ID + core direction; confirm asset mix, priorities, and specs."}, {"id": "c4", "date": "2026-09-03", "label": "Final Wireframes", "fjcAction": "Final approval on wireframes + web copy before UI begins.", "isNew": true}, {"id": "c5", "date": "2026-09-10", "label": "Web UI V1", "fjcAction": "Feedback on landing page visual design."}, {"id": "c6", "date": "2026-09-11", "label": "Rollout Refinement", "fjcAction": "Approve refined comms / rollout plan."}, {"id": "c7", "date": "2026-09-16", "label": "Final UI", "fjcAction": "Approve final UI (incl. mobile), final messaging, and priority asset concepts/layouts."}, {"id": "c8", "date": "2026-09-24", "label": "Toolkit V1 + Continued Asset Development", "fjcAction": "Feedback on Toolkit V1, asset copy, and design."}, {"id": "c9", "date": "2026-10-05", "label": "Toolkit + Launch Asset Finalization", "fjcAction": "Approve toolkits, partner asset templates, and priority launch assets."}, {"id": "c10", "date": "2026-10-07", "label": "Landing Page Staging", "fjcAction": "QA feedback — functionality, content accuracy, links + implementation issues."}, {"id": "c11", "date": "2026-10-13", "label": "Camp Training / Toolkit Handover", "fjcAction": "Coordinate camp onboarding/training."}, {"id": "c12", "date": "2026-10-16", "label": "Web + Campaign Launch", "fjcAction": "No action needed — campaign + web go live."}, {"id": "c13", "date": "2026-10-19", "label": "Paid Media Launch", "fjcAction": "No action needed — paid media goes live."}], "items": [{"id": "i1", "cp": "c1", "cat": "Campaign", "deliverable": "Campaign Naming Shortlist", "version": "COMPLETE", "sharing": "4 name directions for the campaign platform", "needs": "Final name selection", "action": "APPROVAL", "deadline": "2026-08-21", "locks": "Final campaign name: “Road to Camp”", "unlocks": "Campaign ID (9/1); all copy, web, and toolkit references", "notes": "Approved 8/25 — replaces the “Camp for All” placeholder used in earlier materials.", "status": "COMPLETE", "deps": ["d1"]}, {"id": "i2", "cp": "c1", "cat": "Campaign", "deliverable": "Campaign Identity + Creative", "version": "COMPLETE", "sharing": "Creative direction and identity system, two directions presented", "needs": "Consolidated feedback", "action": "APPROVAL", "deadline": "2026-08-21", "locks": "Hybrid creative direction (Direction 1 + Direction 2 elements)", "unlocks": "Campaign ID + asset application (9/1)", "notes": "Approved 8/25 as a hybrid — not a single direction.", "status": "COMPLETE", "deps": ["d1", "d2"]}, {"id": "i3", "cp": "c1", "cat": "Messaging", "deliverable": "Messaging", "version": "COMPLETE — V1 round", "sharing": "Initial message architecture / pillars", "needs": "Consolidated feedback", "action": "FEEDBACK", "deadline": "2026-08-21", "locks": "", "unlocks": "Messaging V2; copy for web, assets, + toolkit", "notes": "Client read: “on the way, but not quite there” — treat V2 as a tightening pass, not a rewrite.", "status": "COMPLETE", "deps": ["d4"]}, {"id": "i4", "cp": "c1", "cat": "Rollout & Launch", "deliverable": "High-Level Comms / Rollout Plan", "version": "COMPLETE — V1 round", "sharing": "Initial channel and rollout approach", "needs": "Consolidated feedback", "action": "FEEDBACK", "deadline": "2026-08-21", "locks": "", "unlocks": "Comms / rollout plan refinement (9/11)", "notes": "", "status": "COMPLETE", "deps": ["d3"]}, {"id": "i5", "cp": "c1", "cat": "Web", "deliverable": "Landing Page Wireframes + Preliminary Copy", "version": "COMPLETE — V1 round", "sharing": "Wireframes + directional web copy", "needs": "Consolidated feedback", "action": "FEEDBACK", "deadline": "2026-08-21", "locks": "", "unlocks": "Wireframe + Copy V2 (8/28)", "notes": "", "status": "COMPLETE", "deps": ["d6"]}, {"id": "i6", "cp": "c2", "cat": "Web", "deliverable": "Web Wireframes + Copy", "version": "V2", "sharing": "Refined wireframes + web copy", "needs": "Feedback", "action": "FEEDBACK", "deadline": "2026-09-01", "locks": "", "unlocks": "Final Wireframes review (9/3)", "notes": "Working toward ~99% of copy locked ahead of UI.", "status": "ON TRACK", "deps": ["d6"]}, {"id": "i7", "cp": "c2", "cat": "Web", "deliverable": "Web Moodboards (TBC)", "version": "Execution", "sharing": "Moodboards for visual direction", "needs": "Feedback", "action": "FEEDBACK", "deadline": "2026-09-01", "locks": "", "unlocks": "Web UI V1 (9/10)", "notes": "We may skip moodboards and go straight into UI once Campaign ID is approved; if included, feedback folds into UI V1.", "status": "ON TRACK", "deps": []}, {"id": "i8", "cp": "c3", "cat": "Campaign", "deliverable": "Campaign ID + Initial Asset Application", "version": "V2", "sharing": "Refined campaign identity system, built on the approved name", "needs": "Approval of refined campaign ID (logo, colors, typography, graphic elements, visual direction)", "action": "APPROVAL", "deadline": "2026-09-02", "locks": "Core campaign identity system", "unlocks": "Asset development, UI design, toolkit development", "notes": "Built on the name + direction approved 8/25.", "status": "ON TRACK", "deps": ["d2"]}, {"id": "i9", "cp": "c3", "cat": "Messaging", "deliverable": "Messaging", "version": "V2", "sharing": "Refined message framework, architecture, and direction for copy", "needs": "Feedback", "action": "FEEDBACK", "deadline": "2026-09-02", "locks": "", "unlocks": "Final messaging (9/16)", "notes": "Asset copy can progress against this draft; final layouts need messaging approved.", "status": "ON TRACK", "deps": ["d4"]}, {"id": "i10", "cp": "c3", "cat": "Assets & Toolkit", "deliverable": "Launch + Toolkit Asset Recommendation", "version": "Recommendation", "sharing": "Recommended asset mix / priorities for launch and partner toolkit", "needs": "Approval on selected channels and asset mix/priorities; confirm required specs (print sizes, mandatory content, camp/partner requirements, formats/platforms)", "action": "CLIENT INPUT", "deadline": "2026-09-02", "locks": "Asset + toolkit production scope", "unlocks": "Priority asset development; Toolkit V1 (9/24)", "notes": "This lock is critical — changes after this date may require rework and affect 9/24 and downstream dates.", "status": "ON TRACK", "deps": ["d3"], "critical": true}, {"id": "i11", "cp": "c4", "cat": "Web", "deliverable": "Web Wireframes + Copy — Final", "version": "Final", "sharing": "Final wireframes + web copy", "needs": "Final approval before UI progresses", "action": "APPROVAL", "deadline": "2026-09-04", "locks": "Page structure, functionality, hierarchy, ~99% of web copy", "unlocks": "Web UI V1 (9/10)", "notes": "Added review round (not in the original plan) to fully lock copy before UI begins. Minor in-situ edits may still happen during UI/staging if within ~10% of approved word count.", "status": "ON TRACK", "deps": ["d6"]}, {"id": "i12", "cp": "c5", "cat": "Web", "deliverable": "Landing Page UI Design", "version": "V1", "sharing": "Visual UI design for the landing page", "needs": "Feedback on visual design", "action": "FEEDBACK", "deadline": "2026-09-11", "locks": "", "unlocks": "Final UI + mobile (9/16)", "notes": "Copy should already be substantially locked; only minor contextual edits expected.", "status": "ON TRACK", "deps": ["d6", "d7"]}, {"id": "i13", "cp": "c6", "cat": "Rollout & Launch", "deliverable": "Comms / Rollout Plan", "version": "Refined", "sharing": "Refined rollout plan across channels", "needs": "Approval", "action": "APPROVAL", "deadline": "2026-09-12", "locks": "Rollout plan", "unlocks": "Launch execution (10/16, 10/19)", "notes": "", "status": "ON TRACK", "deps": ["d3"]}, {"id": "i14", "cp": "c7", "cat": "Assets & Toolkit", "deliverable": "Priority Asset Concepts + Layouts", "version": "Final", "sharing": "Final priority asset concepts", "needs": "Approval of creative direction + layouts for priority assets", "action": "APPROVAL", "deadline": "2026-09-17", "locks": "", "unlocks": "Continued launch asset production; Toolkit V1 (9/24)", "notes": "Final production may still include copy right-sizing, format/spec adaptations, and required variations.", "status": "ON TRACK", "deps": ["d5"]}, {"id": "i15", "cp": "c7", "cat": "Web", "deliverable": "Final UI", "version": "Final", "sharing": "Final responsive UI design including mobile", "needs": "UI approval", "action": "APPROVAL", "deadline": "2026-09-17", "locks": "Visual design, imagery, responsive behavior, final copy", "unlocks": "Landing page moves into development; staging (10/7)", "notes": "", "status": "ON TRACK", "deps": ["d7"]}, {"id": "i16", "cp": "c7", "cat": "Messaging", "deliverable": "Messaging", "version": "Final", "sharing": "Final messaging framework + boilerplate", "needs": "Approval", "action": "APPROVAL", "deadline": "2026-09-17", "locks": "Messaging", "unlocks": "Final copy across remaining assets + toolkit", "notes": "", "status": "ON TRACK", "deps": ["d4", "d5"]}, {"id": "i17", "cp": "c8", "cat": "Assets & Toolkit", "deliverable": "Partner Toolkit", "version": "V1", "sharing": "First version of the customizable partner/camp toolkit", "needs": "Feedback; confirm any remaining camp/partner-specific requirements", "action": "FEEDBACK", "deadline": "2026-09-25", "locks": "", "unlocks": "Toolkit finalization (10/5)", "notes": "", "status": "ON TRACK", "deps": ["d9"]}, {"id": "i18", "cp": "c8", "cat": "Assets & Toolkit", "deliverable": "Additional Launch / Campaign Assets", "version": "In progress", "sharing": "Continued asset development", "needs": "Feedback", "action": "FEEDBACK", "deadline": "2026-09-25", "locks": "", "unlocks": "Final asset mix for launch", "notes": "", "status": "ON TRACK", "deps": ["d5"]}, {"id": "i19", "cp": "c9", "cat": "Assets & Toolkit", "deliverable": "Final Toolkit and Asset Templates, final launch asset revisions", "version": "Final", "sharing": "Final changes to partner/camp toolkit(s) and templates, finalized launch assets", "needs": "Final approval of toolkits, partner asset templates, and launch assets", "action": "APPROVAL", "deadline": "2026-10-06", "locks": "", "unlocks": "File prep for camp onboarding/training; launch across priority channels/assets", "notes": "", "status": "ON TRACK", "deps": ["d9"]}, {"id": "i20", "cp": "c10", "cat": "Web", "deliverable": "Landing Page Staging + QA", "version": "Execution", "sharing": "Landing page presented in staging environment", "needs": "QA feedback focused on functionality, content accuracy, links, and implementation issues", "action": "CLIENT INPUT", "deadline": "2026-10-08", "locks": "", "unlocks": "Web + Campaign Launch (10/16)", "notes": "Previously approved UX/UI should remain locked; reopening decisions at this stage may affect the launch date.", "status": "ON TRACK", "deps": ["d8"]}, {"id": "i21", "cp": "c11", "cat": "Assets & Toolkit", "deliverable": "Toolkit File Prep / Handoff", "version": "Final", "sharing": "Completed toolkit files delivered to partner camps", "needs": "", "action": "NO ACTION", "deadline": null, "locks": "", "unlocks": "Camp onboarding/training", "notes": "", "status": "ON TRACK", "deps": ["d9"]}, {"id": "i22", "cp": "c11", "cat": "Assets & Toolkit", "deliverable": "Camp Onboarding / Toolkit Training", "version": "Execution", "sharing": "Training session(s) for participating camps — live or recorded", "needs": "", "action": "NO ACTION", "deadline": null, "locks": "", "unlocks": "Camps equipped to activate locally", "notes": "", "status": "ON TRACK", "deps": []}, {"id": "i23", "cp": "c12", "cat": "Rollout & Launch", "deliverable": "Campaign Launch", "version": "Execution", "sharing": "Parent-facing FJC campaign + landing page go live", "needs": "", "action": "NO ACTION", "deadline": null, "locks": "", "unlocks": "", "notes": "", "status": "ON TRACK", "deps": []}, {"id": "i24", "cp": "c13", "cat": "Rollout & Launch", "deliverable": "Paid Campaign + Ongoing Optimization", "version": "Begins", "sharing": "Paid campaign goes live and ongoing management begins", "needs": "", "action": "NO ACTION", "deadline": null, "locks": "", "unlocks": "", "notes": "", "status": "ON TRACK", "deps": []}], "dependencies": [{"id": "d1", "locked": "Campaign name", "unlocks": "Campaign ID", "why": "The selected name needs to be incorporated into the identity system."}, {"id": "d2", "locked": "Campaign ID", "unlocks": "Asset design & production, landing page design", "why": "Assets and landing page design need to use the approved identity system; earlier exploration can be used directionally."}, {"id": "d3", "locked": "Rollout strategy, asset mix + specs", "unlocks": "Asset design & production, toolkit planning", "why": "Design needs confirmed priorities, formats, specs, mandatory content + camp/partner requirements. Toolkit needs a confirmed mix of asset templates."}, {"id": "d4", "locked": "Messaging", "unlocks": "Asset copy and toolkits", "why": "Copy can progress alongside messaging refinement and finalize once messaging is approved."}, {"id": "d5", "locked": "Asset copy", "unlocks": "Final asset design & production", "why": "Final asset layouts need to be right-sized to accommodate approved copy."}, {"id": "d6", "locked": "UX + web copy", "unlocks": "UI design", "why": "Page structure and content need to be established before visual design can begin."}, {"id": "d7", "locked": "UI", "unlocks": "Web development & QA", "why": "Development builds the approved design; changes that reopen UX/UI during development may impact timing and/or scope."}, {"id": "d8", "locked": "Web development + QA", "unlocks": "Launch", "why": "Staging and client QA need to be complete before the site can be approved for launch."}, {"id": "d9", "locked": "Toolkit(s)", "unlocks": "File prep/handover", "why": "Approved toolkit content and templates need to be finalized before production files can be prepared and handed over."}], "revisions": [{"name": "Campaign Concept", "rounds": "1 round"}, {"name": "Name", "rounds": "1 round"}, {"name": "Campaign ID", "rounds": "1 round"}, {"name": "Messaging", "rounds": "2 rounds"}, {"name": "Rollout Strategy & Planning", "rounds": "2 rounds"}, {"name": "Launch & Toolkit Asset Development", "rounds": "2 rounds"}, {"name": "Toolkits", "rounds": "1 round"}, {"name": "Wireframes & Copy", "rounds": "2 rounds"}, {"name": "UI", "rounds": "1 round"}, {"name": "Web Development", "rounds": "Client QA prior to launch"}], "revisionsNote": "Revision rounds are planned around the current timeline and assume consolidated feedback within the agreed review windows. Additional revisions or changes to previously approved work may impact timing and/or scope. Wireframes & Copy increased to 2 rounds (V2 + Final) to fully lock copy before UI begins.", "workflows": [{"title": "How the web workflow moves", "phases": [{"phase": "UX — Wireframes + Copy", "what": "V1 review + 2 revision rounds (V2, then Final).", "locks": "Page structure, functionality, hierarchy + ~99% of copy."}, {"phase": "UI — Page Design", "what": "V1 design + 1–2 refinement rounds (TBC).", "locks": "Visual design, imagery, responsive behavior + final copy."}, {"phase": "Development — Staging + Launch", "what": "Build approved UI → staging/QA → launch.", "locks": "Live site."}]}, {"title": "How the asset + toolkit workflow moves", "phases": [{"phase": "Direction + Scope", "what": "Confirm Campaign ID, priority assets, requirements + specs.", "locks": "Identity system; asset mix/priorities + specs."}, {"phase": "Copy", "what": "Develop asset copy against the refined messaging direction.", "locks": "Copy for each priority asset."}, {"phase": "Design", "what": "Apply the approved identity + copy across priority assets.", "locks": "Visual design for priority assets."}, {"phase": "Toolkit Assembly", "what": "Package approved assets, templates + messaging for camps.", "locks": "Toolkit V1 + editable templates."}, {"phase": "Final Production + Handoff", "what": "Prepare final files and equip camps for launch.", "locks": "Final toolkit + launch assets."}]}]}</script>
+<script id="app-code">
+(function(){
+"use strict";
+
+
+var STATUSES = ["COMPLETE","ON TRACK","AT RISK","DELAYED"];
+var ACTIONS  = ["APPROVAL","FEEDBACK","CLIENT INPUT","NO ACTION"];
+var CATS     = ["Campaign","Messaging","Web","Assets & Toolkit","Rollout & Launch"];
+var SCLS = {"COMPLETE":"done","ON TRACK":"ok","AT RISK":"warn","DELAYED":"bad"};
+var ACLS = {"APPROVAL":"a-approval","FEEDBACK":"a-feedback","CLIENT INPUT":"a-input","NO ACTION":"a-none"};
+var DRAFT_KEY = "rtc-draft-v1", PREF_KEY = "rtc-prefs-v1";
+
+var S = null, dirty = false, editing = false, readOnly = false;
+var expanded = {}, hotDep = null;
+var F = {q:"", status:[], action:[], cat:[], tab:"tracker", hideDone:false};
+
+try{ var p = localStorage.getItem(PREF_KEY); if(p){ var pp = JSON.parse(p); if(pp && typeof pp==="object"){ F.hideDone = !!pp.hideDone; } } }catch(e){}
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function el(id){ return document.getElementById(id); }
+function today(){ var t=new Date(); return new Date(t.getFullYear(),t.getMonth(),t.getDate()); }
+function parseD(s){ if(!s) return null; var p=String(s).split("-"); if(p.length!==3) return null;
+  return new Date(+p[0], +p[1]-1, +p[2]); }
+function fmtShort(s){ var d=parseD(s); return d? (d.getMonth()+1)+"/"+d.getDate() : "—"; }
+function fmtLong(s){ var d=parseD(s); if(!d) return "—";
+  return d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}); }
+function daysFrom(s){ var d=parseD(s); if(!d) return null; return Math.round((d-today())/86400000); }
+function relText(s){ var n=daysFrom(s); if(n===null) return "";
+  if(n===0) return "today"; if(n===1) return "tomorrow"; if(n===-1) return "1 day ago";
+  return n<0 ? (-n)+" days ago" : "in "+n+" days"; }
+function byId(list,id){ for(var i=0;i<list.length;i++){ if(list[i].id===id) return list[i]; } return null; }
+function cpOf(item){ return byId(S.checkpoints,item.cp); }
+function sortedCps(){ return S.checkpoints.slice().sort(function(a,b){ return (a.date||"").localeCompare(b.date||""); }); }
+function itemsOf(cpId){ return S.items.filter(function(i){ return i.cp===cpId; }); }
+function cpStatus(cpId){
+  var its = itemsOf(cpId); if(!its.length) return "ON TRACK";
+  for(var i=0;i<its.length;i++){ if(its[i].status==="DELAYED") return "DELAYED"; }
+  for(i=0;i<its.length;i++){ if(its[i].status==="AT RISK") return "AT RISK"; }
+  for(i=0;i<its.length;i++){ if(its[i].status!=="COMPLETE") return "ON TRACK"; }
+  return "COMPLETE";
+}
+function uid(pfx){ var n=1; while(byId(S.items,pfx+n)||byId(S.checkpoints,pfx+n)) n++; return pfx+n; }
+function toast(msg){ var t=el("toast"); if(!t) return; t.textContent=msg; t.hidden=false;
+  clearTimeout(toast._t); toast._t=setTimeout(function(){ t.hidden=true; },3200); }
+
+function saveDraft(){ try{ sessionStorage.setItem(DRAFT_KEY, JSON.stringify(S)); }catch(e){} }
+function clearDraft(){ try{ sessionStorage.removeItem(DRAFT_KEY); }catch(e){} }
+function savePrefs(){ try{ localStorage.setItem(PREF_KEY, JSON.stringify({hideDone:F.hideDone})); }catch(e){} }
+function markDirty(){ dirty = true; saveDraft(); render(); }
+
+/* ---------- filtering ---------- */
+function matches(it){
+  if(F.status.length && F.status.indexOf(it.status)<0) return false;
+  if(F.action.length && F.action.indexOf(it.action)<0) return false;
+  if(F.cat.length && F.cat.indexOf(it.cat)<0) return false;
+  if(F.hideDone && it.status==="COMPLETE") return false;
+  if(F.q){
+    var cp = cpOf(it) || {};
+    var hay = [it.deliverable,it.version,it.sharing,it.needs,it.locks,it.unlocks,it.notes,it.cat,it.action,it.status,cp.label]
+      .join(" ").toLowerCase();
+    if(hay.indexOf(F.q.toLowerCase())<0) return false;
+  }
+  return true;
+}
+function anyFilter(){ return !!(F.q || F.status.length || F.action.length || F.cat.length || F.hideDone); }
+function openActions(){
+  return S.items.filter(function(i){ return i.action!=="NO ACTION" && i.status!=="COMPLETE"; })
+    .sort(function(a,b){ return (a.deadline||"9999").localeCompare(b.deadline||"9999"); });
+}
+function nextCp(){
+  var t = today(), best=null;
+  sortedCps().forEach(function(c){ var d=parseD(c.date); if(d && d>=t && cpStatus(c.id)!=="COMPLETE" && !best) best=c; });
+  return best || sortedCps()[sortedCps().length-1];
+}
+
+/* ---------- render ---------- */
+function statusCounts(){
+  var c={}; STATUSES.forEach(function(s){ c[s]=0; });
+  S.items.forEach(function(i){ if(c[i.status]!==undefined) c[i.status]++; });
+  return c;
+}
+
+function render(){
+  var counts = statusCounts(), total = S.items.length;
+  var done = counts["COMPLETE"], pct = total? Math.round(done/total*100) : 0;
+  var open = openActions(), nc = nextCp();
+  var visible = S.items.filter(matches);
+
+  var h = '<div class="wrap">';
+
+  /* masthead */
+  h += '<header class="masthead"><div class="mh-l">'
+    + '<p class="eyebrow">'+esc(S.meta.client)+' <span class="amp">&times;</span> Bald &nbsp;·&nbsp; '+esc(S.meta.title)+'</p>'
+    + '<h1>'+esc(S.meta.campaign)+'</h1>'
+    + '<p class="sub">Campaign + web milestone tracker</p></div>'
+    + '<div class="mh-r"><p class="updated">Last updated '+esc(fmtLong(S.meta.updated))+'</p>'
+    + '<div class="mh-actions">'
+    + (editing ? '' : '<button class="btn" data-act="edit-on">Edit planner</button>')
+    + '</div></div></header>';
+
+  /* edit bar */
+  if(editing){
+    h += '<div class="editbar"><span class="eb-t"><b>Edit mode.</b> '
+      + (dirty ? 'You have unsaved changes.' : 'Change dates, statuses, or add milestones — then save.')
+      + '</span><span class="spacer"></span>'
+      + '<button class="btn btn-sm" data-act="add-cp">+ Checkpoint</button>'
+      + '<button class="btn btn-sm" data-act="export">Export data</button>'
+      + '<button class="btn btn-sm" data-act="import">Import data</button>'
+      + '<button class="btn btn-sm" data-act="edit-off">Exit</button>'
+      + (dirty ? '<button class="btn btn-sm danger" data-act="discard">Discard</button>'
+               + '<button class="btn btn-sm btn-accent" data-act="save">Download updated tracker</button>' : '')
+      + '</div>';
+    if(dirty){
+      h += '<div class="readonly-note">These changes are held in this browser only. '
+        + '<b>Download updated tracker</b> writes a fresh copy of this page with them baked in — '
+        + 'that file becomes the version you keep and send on.</div>';
+    }
+  }
+  if(readOnly){
+    h += '<div class="readonly-note">This is a read-only view — you can filter and explore everything, but changes can\'t be saved from here. Ask Bald to update the planner.</div>';
+  }
+
+  h += '<p class="intro">'+esc(S.meta.intro)+'</p>';
+
+  /* dashboard */
+  h += '<section class="dash">'
+    + '<div class="prog"><div class="prog-top"><strong>'+done+' of '+total+' deliverables complete</strong>'
+    + '<span class="mono prog-pct">'+pct+'%</span></div>'
+    + '<div class="prog-bar"><div class="prog-fill" data-pct="'+pct+'"></div></div></div>'
+    + '<div class="tiles">';
+  STATUSES.forEach(function(s){
+    var on = F.status.indexOf(s)>=0;
+    h += '<button class="tile t-'+SCLS[s]+(counts[s]?"":" zero")+'" data-act="fstatus" data-v="'+esc(s)+'" aria-pressed="'+on+'">'
+      + '<span class="dot"></span><span class="n">'+counts[s]+'</span><span class="lbl">'+esc(s)+'</span></button>';
+  });
+  h += '</div><div class="focus-row">'
+    + '<div class="focus"><p class="eyebrow">Awaiting FJC</p><b>'+open.length+' open action'+(open.length===1?"":"s")+'</b>'
+    + '<span class="meta">'+(open.length? 'Next due '+fmtShort(open[0].deadline)+' · '+relText(open[0].deadline) : 'Nothing outstanding')+'</span></div>'
+    + '<div class="focus"><p class="eyebrow">Next checkpoint</p><b>'+esc(nc? nc.label : "—")+'</b>'
+    + '<span class="meta">'+(nc? fmtLong(nc.date)+' · '+relText(nc.date) : '')+'</span></div>'
+    + '</div></section>';
+
+  /* tabs */
+  h += '<nav class="tabs" role="tablist">'
+    + tabBtn("tracker","Milestones", S.items.length)
+    + tabBtn("actions","FJC actions", open.length)
+    + tabBtn("deps","Dependencies", S.dependencies.length)
+    + tabBtn("ref","How the work moves", null)
+    + '</nav>';
+
+  /* controls (tracker + actions only) */
+  if(F.tab==="tracker"){
+    h += '<div class="controls">'
+      + '<label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>'
+      + '<input type="search" id="q" placeholder="Search deliverables, notes, what gets locked…" value="'+esc(F.q)+'"></label>'
+      + '<div class="chipset"><span class="cs-label">Needs</span>'
+      + ACTIONS.map(function(a){ return chip("faction",a,F.action.indexOf(a)>=0); }).join("")
+      + '</div><div class="chipset"><span class="cs-label">Workstream</span>'
+      + CATS.map(function(c){ return chip("fcat",c,F.cat.indexOf(c)>=0); }).join("")
+      + '</div>'
+      + '<div class="chipset"><span class="cs-label">View</span>'
+      + '<button class="chip" data-act="hidedone" aria-pressed="'+F.hideDone+'">Hide complete</button></div>'
+      + (anyFilter()? '<button class="clear-link" data-act="clear">Clear filters — showing '+visible.length+' of '+total+'</button>' : '')
+      + '</div>';
+  }
+
+  h += '<main id="view">';
+  if(F.tab==="tracker") h += renderTracker(visible);
+  else if(F.tab==="actions") h += renderActions(open);
+  else if(F.tab==="deps") h += renderDeps();
+  else h += renderRef();
+  h += '</main>';
+
+  h += '<footer><span>'+esc(S.meta.deadlineNote)+'</span><span class="mono">'+esc(S.meta.client)+' × Bald</span></footer>';
+  h += '</div><div id="toast" hidden></div>';
+
+  el("root").innerHTML = h;
+  document.body.classList.toggle("editing", editing);
+
+  var fill = document.querySelector(".prog-fill");
+  if(fill) fill.style.width = (parseFloat(fill.getAttribute("data-pct")) || 0) + "%";
+
+  var q = el("q");
+  if(q && render._focusQ){ q.focus(); try{ q.setSelectionRange(q.value.length,q.value.length); }catch(e){} render._focusQ=false; }
+}
+
+function tabBtn(id,label,count){
+  return '<button class="tab" role="tab" data-act="tab" data-v="'+esc(id)+'" aria-selected="'+(F.tab===id)+'">'
+    + esc(label) + (count===null?"":'<span class="count">'+count+'</span>') + '</button>';
+}
+function chip(act,val,on){
+  return '<button class="chip" data-act="'+act+'" data-v="'+esc(val)+'" aria-pressed="'+on+'">'+esc(val)+'</button>';
+}
+function pill(status){ return '<span class="pill p-'+SCLS[status]+'">'+esc(status)+'</span>'; }
+function actTag(a){ return a==="NO ACTION" ? '<span class="act a-none">No action</span>'
+  : '<span class="act '+ACLS[a]+'">'+esc(a)+'</span>'; }
+
+function renderTracker(visible){
+  var cps = sortedCps(), out = "", any = false;
+  var h = '<div class="groups">';
+  cps.forEach(function(c){
+    var its = itemsOf(c.id).filter(matches);
+    if(!its.length && anyFilter()) return;
+    any = true;
+    var st = cpStatus(c.id);
+    var past = parseD(c.date) && parseD(c.date) < today() && st==="COMPLETE";
+    h += '<section class="group'+(past?' is-past':'')+'">'
+      + '<div class="ghead"><div class="gdate mono">'+esc(fmtShort(c.date))+'</div>'
+      + '<div class="gmain"><div class="gtitle">'+esc(c.label)
+      + (c.isNew? '<span class="newtag">Added</span>':'')
+      + (editing? ' <button class="btn btn-quiet btn-sm" data-act="edit-cp" data-v="'+esc(c.id)+'">Edit</button>':'')
+      + '</div>'
+      + '<div class="gaction">'+esc(c.fjcAction)+'</div></div>'
+      + '<div class="gright">'+pill(st)+'</div></div>'
+      + '<div class="rows">';
+    if(!its.length) h += '<div class="rowempty">No deliverables logged against this checkpoint yet.</div>';
+    its.forEach(function(it){ h += renderRow(it); });
+    if(editing) h += '<div class="addrow"><button class="btn btn-sm" data-act="add-item" data-v="'+esc(c.id)+'">+ Add milestone to '+esc(fmtShort(c.date))+'</button></div>';
+    h += '</div></section>';
+  });
+  h += '</div>';
+  if(!any) h = '<div class="empty"><b>Nothing matches those filters</b>Try clearing a filter or searching for something else.</div>';
+  return h;
+}
+
+function renderRow(it){
+  var open = !!expanded[it.id];
+  var h = '<article class="row'+(open?' open':'')+'" id="row-'+esc(it.id)+'">'
+    + '<button class="rhead" data-act="toggle" data-v="'+esc(it.id)+'" aria-expanded="'+open+'">'
+    + '<span class="caret"></span>'
+    + '<span class="rmain"><span class="rtitle">'+esc(it.deliverable)+'</span>'
+    + '<span class="rmeta">'+esc(it.cat)+'<span class="sep">/</span>'+esc(it.version||"—")
+    + (it.deadline? '<span class="sep">/</span>Due '+esc(fmtShort(it.deadline)) : '')
+    + (it.critical? '<span class="sep">/</span><span class="crit">Critical lock</span>':'')
+    + '</span></span>'
+    + '<span class="rright">'+actTag(it.action)+pill(it.status)+'</span>'
+    + '</button>';
+  if(open){
+    h += '<div class="rbody">';
+    h += fld("What we're sharing", it.sharing, true);
+    h += fld("What we need from FJC", it.needs || "Nothing at this step", true);
+    h += fld("Feedback deadline", it.deadline? fmtLong(it.deadline)+" · "+relText(it.deadline) : "—");
+    h += fld("Version / stage", it.version || "—");
+    if(it.locks) h += fld("What gets locked here", it.locks, true);
+    if(it.unlocks) h += fld("What this unlocks", it.unlocks, true);
+    if(it.deps && it.deps.length){
+      h += '<div class="fld span-all"><span class="k">Dependency chain</span><div class="deplinks">'
+        + it.deps.map(function(id){ var d=byId(S.dependencies,id); return d?
+            '<button class="deplink" data-act="godep" data-v="'+esc(id)+'">'+esc(d.locked)+' &rarr; '+esc(d.unlocks)+'</button>':""; }).join("")
+        + '</div></div>';
+    }
+    if(it.notes) h += '<div class="note-callout">'+esc(it.notes)+'</div>';
+    if(editing) h += '<div class="row-tools"><button class="btn btn-sm" data-act="edit-item" data-v="'+esc(it.id)+'">Edit milestone</button>'
+      + '<button class="btn btn-sm danger" data-act="del-item" data-v="'+esc(it.id)+'">Delete</button></div>';
+    h += '</div>';
+  }
+  return h + '</article>';
+}
+function fld(k,v,strong){
+  return '<div class="fld"><span class="k">'+esc(k)+'</span><span class="v'+(strong?" strong":"")+'">'+esc(v||"—")+'</span></div>';
+}
+
+function renderActions(open){
+  if(!open.length) return '<div class="empty"><b>Nothing outstanding</b>Every action assigned to FJC has been returned.</div>';
+  var h = '<div class="check">';
+  open.forEach(function(it){
+    var n = daysFrom(it.deadline), over = (n!==null && n<0);
+    var cp = cpOf(it) || {};
+    h += '<article class="cl-item'+(over?' overdue':'')+'">'
+      + '<div class="cl-date"><span class="d">'+esc(fmtShort(it.deadline))+'</span>'
+      + '<span class="rel">'+esc(it.deadline? relText(it.deadline) : "no date")+'</span></div>'
+      + '<div class="cl-main"><span class="ctx">'+esc(fmtShort(cp.date))+' · '+esc(cp.label||"")+'</span>'
+      + '<span class="t">'+esc(it.deliverable)+(it.version?' — '+esc(it.version):'')+'</span>'
+      + (it.sharing? '<span class="n">You\'ll receive: '+esc(it.sharing)+'</span>':'')
+      + '<span class="need"><b>Your action:</b> '+esc(it.needs||"—")+'</span>'
+      + (it.locks? '<span class="ctx">Locks: '+esc(it.locks)+'</span>':'')
+      + '</div>'
+      + '<div class="cl-right">'+actTag(it.action)+pill(it.status)+'</div>'
+      + '</article>';
+  });
+  return h + '</div>';
+}
+
+function renderDeps(){
+  var h = '<div class="chain">';
+  S.dependencies.forEach(function(d){
+    var rel = S.items.filter(function(i){ return (i.deps||[]).indexOf(d.id)>=0; });
+    h += '<article class="dep'+(hotDep===d.id?' hot':'')+'" id="dep-'+esc(d.id)+'">'
+      + '<div class="lock">'+esc(d.locked)+'</div><div class="arrow">&rarr;</div><div class="un">'+esc(d.unlocks)+'</div>'
+      + '<div class="why">'+esc(d.why)+'</div>';
+    if(rel.length){
+      h += '<div class="rel">'+rel.map(function(i){
+        return '<button class="deplink" data-act="goitem" data-v="'+esc(i.id)+'">'+esc(fmtShort(i.date||(cpOf(i)||{}).date))
+          +' · '+esc(i.deliverable)+' '+(i.status==="COMPLETE"?'✓':'')+'</button>'; }).join("")+'</div>';
+    }
+    h += '</article>';
+  });
+  return h + '</div>';
+}
+
+function renderRef(){
+  var h = '<div class="ref">';
+  S.workflows.forEach(function(w){
+    h += '<section class="card"><h3>'+esc(w.title)+'</h3><div class="tblwrap"><table>'
+      + '<thead><tr><th>Phase</th><th>What happens</th><th>What gets locked</th></tr></thead><tbody>'
+      + w.phases.map(function(p){ return '<tr><td class="k">'+esc(p.phase)+'</td><td>'+esc(p.what)+'</td><td>'+esc(p.locks)+'</td></tr>'; }).join("")
+      + '</tbody></table></div></section>';
+  });
+  h += '<section class="card"><h3>Planned revisions at a glance</h3><div class="tblwrap"><table>'
+    + '<thead><tr><th>Deliverable / workstream</th><th>Maximum planned revision rounds</th></tr></thead><tbody>'
+    + S.revisions.map(function(r){ return '<tr><td class="k">'+esc(r.name)+'</td><td class="mono">'+esc(r.rounds)+'</td></tr>'; }).join("")
+    + '</tbody></table></div><p class="card-foot">'
+    + esc(S.revisionsNote)+'</p></section>';
+
+  h += '<section class="card"><h3>What each action type means</h3><div class="keylist">'
+    + ACTIONS.map(function(a){ return '<div class="keyline"><span>'+actTag(a)+'</span><span>'+esc(S.meta.actionKey[a]||"")+'</span></div>'; }).join("")
+    + '</div></section>';
+  h += '<section class="card"><h3>What each status means</h3><div class="keylist">'
+    + STATUSES.map(function(s){ return '<div class="keyline"><span>'+pill(s)+'</span><span>'+esc(S.meta.statusKey[s]||"")+'</span></div>'; }).join("")
+    + '</div><p class="card-foot">'
+    + 'Checkpoint status is calculated from the deliverables inside it — the earliest problem wins.</p></section>';
+  h += '<section class="card"><h3>How to read this planner</h3><ul class="notelist">'
+    + S.meta.notes.map(function(n){ return '<li>'+esc(n)+'</li>'; }).join("")
+    + '</ul></section>';
+  return h + '</div>';
+}
+
+/* ---------- modal ---------- */
+function opt(list,val){ return list.map(function(v){ return '<option value="'+esc(v)+'"'+(v===val?" selected":"")+'>'+esc(v)+'</option>'; }).join(""); }
+
+function openItemModal(item, cpId){
+  var isNew = !item;
+  var it = item || {id:uid("i"), cp:cpId, cat:"Web", deliverable:"", version:"", sharing:"", needs:"",
+    action:"FEEDBACK", deadline:null, locks:"", unlocks:"", notes:"", status:"ON TRACK", deps:[]};
+  var cps = sortedCps();
+  var body = ''
+    + '<div class="f wide"><label for="m-del">Deliverable / workstream</label><input id="m-del" value="'+esc(it.deliverable)+'"></div>'
+    + '<div class="f"><label for="m-cp">Checkpoint</label><select id="m-cp">'
+      + cps.map(function(c){ return '<option value="'+esc(c.id)+'"'+(c.id===it.cp?" selected":"")+'>'+esc(fmtShort(c.date))+' — '+esc(c.label)+'</option>'; }).join("")
+      + '</select></div>'
+    + '<div class="f"><label for="m-cat">Workstream</label><select id="m-cat">'+opt(CATS,it.cat)+'</select></div>'
+    + '<div class="f"><label for="m-ver">Version / stage</label><input id="m-ver" value="'+esc(it.version)+'" placeholder="V1, Final, Execution…"></div>'
+    + '<div class="f"><label for="m-status">Status</label><select id="m-status">'+opt(STATUSES,it.status)+'</select></div>'
+    + '<div class="f"><label for="m-action">What FJC needs to do</label><select id="m-action">'+opt(ACTIONS,it.action)+'</select></div>'
+    + '<div class="f"><label for="m-dl">Feedback / approval deadline</label><input id="m-dl" type="date" value="'+esc(it.deadline||"")+'"></div>'
+    + '<div class="f wide"><label for="m-sharing">What we\'re sharing</label><textarea id="m-sharing">'+esc(it.sharing)+'</textarea></div>'
+    + '<div class="f wide"><label for="m-needs">What we need from FJC</label><textarea id="m-needs">'+esc(it.needs)+'</textarea></div>'
+    + '<div class="f wide"><label for="m-locks">What gets locked here</label><textarea id="m-locks">'+esc(it.locks)+'</textarea></div>'
+    + '<div class="f wide"><label for="m-unlocks">What this unlocks</label><textarea id="m-unlocks">'+esc(it.unlocks)+'</textarea></div>'
+    + '<div class="f wide"><label for="m-notes">Note to the client</label><textarea id="m-notes">'+esc(it.notes)+'</textarea></div>'
+    + '<div class="f wide"><label>Dependency chain links</label><div class="deplinks">'
+      + S.dependencies.map(function(d){
+          var on = (it.deps||[]).indexOf(d.id)>=0;
+          return '<button type="button" class="chip" data-dep="'+esc(d.id)+'" aria-pressed="'+on+'">'+esc(d.locked)+' &rarr; '+esc(d.unlocks)+'</button>';
+        }).join("")
+      + '</div></div>';
+
+  showModal(isNew? "Add milestone":"Edit milestone", body, function(dlg){
+    var deps = [];
+    dlg.querySelectorAll("[data-dep]").forEach(function(b){ if(b.getAttribute("aria-pressed")==="true") deps.push(b.getAttribute("data-dep")); });
+    var next = {
+      id: it.id, cp: el("m-cp").value, cat: el("m-cat").value,
+      deliverable: el("m-del").value.trim() || "Untitled milestone",
+      version: el("m-ver").value.trim(), sharing: el("m-sharing").value.trim(),
+      needs: el("m-needs").value.trim(), action: el("m-action").value,
+      deadline: el("m-dl").value || null, locks: el("m-locks").value.trim(),
+      unlocks: el("m-unlocks").value.trim(), notes: el("m-notes").value.trim(),
+      status: el("m-status").value, deps: deps, critical: !!it.critical
+    };
+    if(isNew) S.items.push(next);
+    else { for(var i=0;i<S.items.length;i++){ if(S.items[i].id===it.id){ S.items[i]=next; break; } } }
+    expanded[next.id] = true;
+    markDirty();
+  }, isNew? null : function(){
+    S.items = S.items.filter(function(x){ return x.id!==it.id; });
+    markDirty();
+  });
+
+  var dlg = el("modal");
+  dlg.querySelectorAll("[data-dep]").forEach(function(b){
+    b.addEventListener("click", function(){ b.setAttribute("aria-pressed", b.getAttribute("aria-pressed")==="true"?"false":"true"); });
+  });
+}
+
+function openCpModal(cp){
+  var isNew = !cp;
+  var c = cp || {id:uid("c"), date:"", label:"", fjcAction:""};
+  var body = ''
+    + '<div class="f"><label for="m-date">Checkpoint date</label><input id="m-date" type="date" value="'+esc(c.date)+'"></div>'
+    + '<div class="f"><label for="m-new">Flag as newly added</label><select id="m-new"><option value="no"'+(c.isNew?"":" selected")+'>No</option><option value="yes"'+(c.isNew?" selected":"")+'>Yes</option></select></div>'
+    + '<div class="f wide"><label for="m-label">Checkpoint name</label><input id="m-label" value="'+esc(c.label)+'"></div>'
+    + '<div class="f wide"><label for="m-fjc">Primary FJC action</label><textarea id="m-fjc">'+esc(c.fjcAction)+'</textarea></div>';
+
+  showModal(isNew? "Add checkpoint":"Edit checkpoint", body, function(){
+    var next = {id:c.id, date: el("m-date").value || c.date, label: el("m-label").value.trim() || "Untitled checkpoint",
+      fjcAction: el("m-fjc").value.trim()};
+    if(el("m-new").value==="yes") next.isNew = true;
+    if(isNew) S.checkpoints.push(next);
+    else { for(var i=0;i<S.checkpoints.length;i++){ if(S.checkpoints[i].id===c.id){ S.checkpoints[i]=next; break; } } }
+    markDirty();
+  }, isNew? null : function(){
+    if(itemsOf(c.id).length){ toast("Move or delete this checkpoint's milestones first."); return false; }
+    S.checkpoints = S.checkpoints.filter(function(x){ return x.id!==c.id; });
+    markDirty();
+  });
+}
+
+function showModal(title, bodyHtml, onSave, onDelete, saveLabel){
+  var old = el("modal"); if(old) old.remove();
+  var dlg = document.createElement("dialog");
+  dlg.id = "modal";
+  dlg.innerHTML = '<div class="mhd"><h2>'+esc(title)+'</h2>'
+    + '<button type="button" class="btn btn-quiet" data-close aria-label="Close">&times;</button></div>'
+    + '<div class="mbody">'+bodyHtml+'</div>'
+    + '<div class="mfoot">'
+    + (onDelete? '<button type="button" class="btn danger" id="m-delete">Delete</button>':'')
+    + '<div class="right"><button type="button" class="btn" data-close>Cancel</button>'
+    + '<button type="button" class="btn btn-accent" id="m-save">'+esc(saveLabel||"Save")+'</button></div></div>';
+  document.body.appendChild(dlg);
+  dlg.querySelectorAll("[data-close]").forEach(function(b){
+    b.addEventListener("click", function(){ dlg.close(); dlg.remove(); });
+  });
+  el("m-save").addEventListener("click", function(){
+    if(onSave(dlg)===false) return; dlg.close(); dlg.remove();
+  });
+  if(onDelete) el("m-delete").addEventListener("click", function(){
+    if(onDelete()===false) return; dlg.close(); dlg.remove();
+  });
+  dlg.addEventListener("cancel", function(){ dlg.remove(); });
+  dlg.showModal();
+  var first = dlg.querySelector("input,select,textarea");
+  if(first) first.focus();
+}
+
+/* ---------- data + saving (no server) ---------- */
+/* The planner lives inside this file. "Save" writes a fresh copy of the whole
+   tracker — same page, new data baked in — which you keep or send on. Edits made
+   before that are held in the browser as a draft, so a refresh doesn't lose them
+   (browsers block storage for files opened straight from disk, so on a
+   double-clicked file the draft won't survive a refresh — download first). */
+
+function boot(){
+  try{
+    S = JSON.parse(document.getElementById("app-state").textContent);
+  }catch(e){
+    document.getElementById("root").innerHTML =
+      '<div class="wrap"><div class="empty"><b>Couldn\'t read the planner data</b>'
+      + 'This file looks damaged — go back to the last copy you downloaded.</div></div>';
+    return;
+  }
+  try{
+    var d = sessionStorage.getItem(DRAFT_KEY);
+    if(d){ S = JSON.parse(d); dirty = true; editing = true; }
+  }catch(e){}
+  render();
+}
+
+/* Rebuild this exact page with new data in it. The stylesheet and the script are
+   read back out of the live document, so a downloaded copy can save itself again. */
+function buildDoc(state){
+  var css  = document.getElementById("app-css").textContent;
+  var code = document.getElementById("app-code").textContent;
+  var json = JSON.stringify(state).replace(/</g, "\\u003c");
+  return '<!doctype html>\n<html lang="en">\n<head>\n'
+    + '<meta charset="utf-8">\n'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>' + esc(state.meta.campaign) + ' — Campaign Tracker<\/title>\n'
+    + '<meta name="robots" content="noindex">\n'
+    + '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+    + '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">\n'
+    + '<style id="app-css">\n' + css + '\n<\/style>\n'
+    + '</head>\n<body>\n'
+    + '<div id="root"></div>\n'
+    + '<script id="app-state" type="application/json">' + json + '<\/script>\n'
+    + '<script id="app-code">\n' + code + '\n<\/script>\n'
+    + '</body>\n</html>\n';
+}
+
+function download(filename, text, mime){
+  var url = URL.createObjectURL(new Blob([text], {type: mime}));
+  var a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+}
+
+function doSave(){
+  var t = new Date();
+  S.meta.updated = t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0");
+  var stamp = S.meta.updated.replace(/-/g, "");
+  download("road-to-camp-tracker-" + stamp + ".html", buildDoc(S), "text/html");
+  dirty = false;
+  clearDraft();
+  render();
+  toast("Downloaded. That file is now the current tracker — replace your old copy with it.");
+}
+
+function exportJson(){
+  download("data.json", JSON.stringify(S, null, 2), "application/json");
+}
+
+/* Load a data.json back in — for restoring a backup, or after bulk-editing the
+   file by hand in a text editor. */
+function importJson(){
+  var input = document.createElement("input");
+  input.type = "file";
+  input.accept = "application/json,.json";
+  input.addEventListener("change", function(){
+    var file = input.files && input.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      var next;
+      try{ next = JSON.parse(reader.result); }
+      catch(e){ toast("That file isn't valid JSON."); return; }
+      if(!next || !Array.isArray(next.checkpoints) || !Array.isArray(next.items) || !next.meta){
+        toast("That JSON isn't a planner file — it needs meta, checkpoints and items.");
+        return;
+      }
+      S = next; expanded = {};
+      markDirty();
+      toast("Loaded " + next.items.length + " deliverables. Download the tracker to keep this.");
+    };
+    reader.onerror = function(){ toast("Couldn't read that file."); };
+    reader.readAsText(file);
+  });
+  input.click();
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click", function(ev){
+  var t = ev.target.closest("[data-act]");
+  if(!t) return;
+  var act = t.getAttribute("data-act"), v = t.getAttribute("data-v");
+  if(act==="tab"){ F.tab = v; hotDep = null; render(); return; }
+  if(act==="toggle"){ expanded[v] = !expanded[v]; render();
+    var r = el("row-"+v); if(r && expanded[v]) r.querySelector(".rhead").focus(); return; }
+  if(act==="fstatus"){ toggleIn(F.status, v); render(); return; }
+  if(act==="faction"){ toggleIn(F.action, v); render(); return; }
+  if(act==="fcat"){ toggleIn(F.cat, v); render(); return; }
+  if(act==="hidedone"){ F.hideDone = !F.hideDone; savePrefs(); render(); return; }
+  if(act==="clear"){ F.q=""; F.status=[]; F.action=[]; F.cat=[]; F.hideDone=false; savePrefs(); render(); return; }
+  if(act==="godep"){ F.tab="deps"; hotDep=v; render();
+    var d = el("dep-"+v); if(d) d.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  if(act==="goitem"){ F.tab="tracker"; F.status=[]; F.action=[]; F.cat=[]; F.q=""; F.hideDone=false; expanded[v]=true; render();
+    var r2 = el("row-"+v); if(r2) r2.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  if(act==="edit-on"){ editing = true; render(); return; }
+  if(act==="edit-off"){ editing = false; render(); return; }
+  if(act==="save"){ doSave(); return; }
+  if(act==="export"){ exportJson(); return; }
+  if(act==="import"){ importJson(); return; }
+  if(act==="discard"){ clearDraft(); dirty = false; boot(); return; }
+  if(act==="add-cp"){ openCpModal(null); return; }
+  if(act==="edit-cp"){ openCpModal(byId(S.checkpoints,v)); return; }
+  if(act==="add-item"){ openItemModal(null, v); return; }
+  if(act==="edit-item"){ openItemModal(byId(S.items,v)); return; }
+  if(act==="del-item"){
+    if(t.dataset.armed==="1"){ S.items = S.items.filter(function(x){ return x.id!==v; }); markDirty(); }
+    else { t.dataset.armed="1"; t.textContent="Click again to delete";
+      setTimeout(function(){ if(t.isConnected){ t.dataset.armed=""; t.textContent="Delete"; } },4000); }
+    return; }
+});
+function toggleIn(arr,v){ var i=arr.indexOf(v); if(i<0) arr.push(v); else arr.splice(i,1); }
+
+var qTimer = null;
+document.addEventListener("input", function(ev){
+  if(ev.target && ev.target.id==="q"){
+    F.q = ev.target.value;
+    clearTimeout(qTimer);
+    qTimer = setTimeout(function(){ render._focusQ = true; render(); }, 160);
+  }
+});
+
+window.addEventListener("beforeunload", function(ev){
+  if(dirty){ ev.preventDefault(); ev.returnValue = ""; }
+});
+
+boot();
+})();
+
+</script>
+</body>
+</html>
